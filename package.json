@@ -12,8 +12,12 @@
   "engines": {
     "node": ">=22"
   },
+  "bin": {
+    "design-brief": "packages/cli/dist/bin.js"
+  },
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
+    "build": "npm run build -w @design-brief/core && npm run build -w @design-brief/cli && npm run build -w @design-brief/playground",
+    "prepare": "npm run build",
     "test": "npm run test --workspaces --if-present",
     "dev": "npm run dev --workspace @design-brief/playground --if-present"
   }
