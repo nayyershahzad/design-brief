@@ -1,0 +1,32 @@
+{
+  "name": "@design-brief/core",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "design-brief core: Direction schema, presets, deterministic render, and exporters. No AI, no UI.",
+  "license": "MIT",
+  "author": "Nayyer Shahzad",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
