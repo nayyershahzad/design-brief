@@ -1,6 +1,7 @@
 {
   "name": "@design-brief/core",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "design-brief core: Direction schema, presets, deterministic render, and exporters. No AI, no UI.",
   "license": "MIT",

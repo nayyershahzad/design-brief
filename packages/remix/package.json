@@ -1,6 +1,7 @@
 {
   "name": "@design-brief/remix",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "design-brief OPTIONAL remix: provider-neutral AI authoring of new Directions. Isolated — core, playground, and cli never import this; delete it and the tool still works.",
   "license": "MIT",

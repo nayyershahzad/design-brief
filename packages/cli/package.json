@@ -1,6 +1,7 @@
 {
   "name": "@design-brief/cli",
   "version": "0.0.0",
+  "private": true,
   "type": "module",
   "description": "design-brief CLI: boot the playground, detect the project, write exports.",
   "license": "MIT",

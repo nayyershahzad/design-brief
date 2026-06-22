@@ -11,6 +11,11 @@
 // loads via a runtime dynamic import. Keeping it external preserves the M4 isolation
 // (the bundle has no build-time dependency on remix) and its graceful absence.
 import { build } from "esbuild";
+import { rmSync } from "node:fs";
+
+// Clean stale output first: the bundle is a single self-contained file, so any
+// leftover per-module tsc emit from an older build must not linger and ship.
+rmSync("dist", { recursive: true, force: true });
 
 await build({
   entryPoints: ["src/bin.ts"],
