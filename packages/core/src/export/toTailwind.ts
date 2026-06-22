@@ -20,6 +20,14 @@ export function toTailwindExtend(d: Direction): Record<string, unknown> {
         borderWidth: {
           hairline: d.shape.borderWidth,
         },
+        transitionDuration: {
+          fast: d.motion.durationFast,
+          DEFAULT: d.motion.durationBase,
+        },
+        transitionTimingFunction: {
+          standard: d.motion.easingStandard,
+          entrance: d.motion.easingEntrance,
+        },
         colors: {
           accent: {
             DEFAULT: d.color.accent.primary,

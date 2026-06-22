@@ -14,15 +14,51 @@ export function toDesignSpec(d: Direction): string {
   const p = d.provenance;
   const personality = d.personality.join(" · ");
   const dark = d.colorScheme === "dark-first";
+  const m = d.motion;
+  const elevation = d.color.surface.elevation ?? "border";
+  const texture = d.color.surface.texture ?? "none";
+
+  const hoverDesc: Record<typeof m.hover, string> = {
+    none: "no hover transform",
+    lift: "lift 2px (translateY(-2px))",
+    scale: "scale to 1.02",
+    glow: "accent glow ring",
+  };
+  const revealDesc: Record<typeof m.scrollReveal, string> = {
+    none: "no scroll reveal",
+    fade: "fade in on enter",
+    "fade-up": "fade + 10px rise on enter",
+    stagger: "staggered fade-up for child lists",
+  };
+  const pressDesc = m.press === "scale-down" ? "scale to 0.98 on press" : "no press transform";
+
+  const motionSection =
+    m.level === "none"
+      ? "No motion. Render everything static — no transitions, hovers, or scroll reveals."
+      : [
+          `- Level: **${m.level}**. Animate ONLY \`transform\` and \`opacity\` (never width/height/top/left) to stay 60fps.`,
+          `- Durations: fast \`${m.durationFast}\` (hover/press), base \`${m.durationBase}\` (entrances/transitions).`,
+          `- Easing: \`${m.easingStandard}\` for state changes, \`${m.easingEntrance}\` for entrances/reveals.`,
+          `- Hover: ${hoverDesc[m.hover]}. Press: ${pressDesc}. Scroll reveal: ${revealDesc[m.scrollReveal]}.`,
+          "- ALWAYS wrap motion in `@media (prefers-reduced-motion: no-preference)` with a static fallback. `globals.css` ships ready-made `.db-transition` / `.db-hover` / `.db-pressable` / `.db-reveal` utilities.",
+        ].join("\n");
+
+  const textureSection =
+    texture === "none"
+      ? ""
+      : `\n## Surface texture\n\n- Texture: **${texture}**. Apply the exported \`.db-grain\` overlay for depth on large surfaces; keep it off text and never let it drop contrast below 4.5:1.\n`;
 
   const tokenJson = JSON.stringify(
     {
       direction: d.id,
+      appTypes: d.appTypes,
+      aesthetic: d.aesthetic,
       colorScheme: d.colorScheme,
       color: d.color,
       typography: d.typography,
       shape: d.shape,
       density: d.density,
+      motion: d.motion,
     },
     null,
     2,
@@ -39,7 +75,11 @@ export function toDesignSpec(d: Direction): string {
     `One accent only. \`${d.color.accent.primary}\` is reserved for primary actions and live/changing data. Do not introduce a second accent hue.`,
     `Numerals and tabular data render in \`${d.typography.fontMono}\` with \`font-variant-numeric: tabular-nums\` (${d.typography.monoUsage}).`,
     `Radius never exceeds \`${d.shape.radiusLarge}\`. No pill buttons; no rounding beyond the token.`,
-    `Borders are \`${d.shape.borderWidth}\`, color \`${d.color.surface.border}\`. Use borders, not drop shadows, for separation.`,
+    elevation === "shadow"
+      ? `Separation via soft shadows is intended (\`elevation: shadow\`); keep the \`${d.shape.borderWidth}\` \`${d.color.surface.border}\` border subtle.`
+      : elevation === "flat"
+        ? `Flat surfaces (\`elevation: flat\`) — separate with spacing and the \`${d.color.surface.border}\` border, not shadows.`
+        : `Borders are \`${d.shape.borderWidth}\`, color \`${d.color.surface.border}\`. Use borders, not drop shadows, for separation.`,
     `${cap(d.density.level)} density: table rows \`${d.density.rowHeight}\`. Do not pad out to looser spacing.`,
     `Accessibility floor: text-on-surface contrast >= 4.5:1. Secondary text \`${d.color.text.secondary}\` is intended for use on \`${d.color.surface.base}\`.`,
   ];
@@ -62,6 +102,8 @@ export function toDesignSpec(d: Direction): string {
 |---|---|
 | Locked direction | \`${d.label}\` (\`${d.id}\`) |
 | Personality | ${personality} |
+| App types | ${d.appTypes.join(", ")} |
+| Aesthetic | ${d.aesthetic ?? "—"} |
 | Color scheme | ${d.colorScheme} |
 | Seeded from | \`${p.seededFrom}\` |
 | Remixed | ${p.remixed ? "yes" : "no"} |
@@ -100,6 +142,10 @@ ${constraints.map((c) => `- ${c}`).join("\n")}
 - Metric cards: label ${scaleSmall}px \`--muted-foreground\` uppercase, value ${scaleLarge}px mono \`--foreground\`, delta in semantic color.
 - Inputs: ${d.density.rowHeight} height, \`${d.shape.borderWidth}\` border, focus ring \`--primary\`, no glow.
 
+## Motion
+
+${motionSection}
+${textureSection}
 ## What changed from the seed preset
 
 ${changed}

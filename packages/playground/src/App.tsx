@@ -43,7 +43,7 @@ export default function App() {
   );
 
   function handleBrief(b: Brief) {
-    const seeded = seedDirections(b.personality);
+    const seeded = seedDirections(b.personality, b.appFamily);
     setBrief(b);
     setDirections(seeded);
     setSelectedId(seeded[0]?.id ?? null);

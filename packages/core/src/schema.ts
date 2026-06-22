@@ -6,10 +6,28 @@ import { z } from "zod";
  * Validate with DirectionSchema.parse() at every boundary (preset load,
  * remix output, file import).
  */
+/** The app-type families a direction is suited to (drives brief-based seeding). */
+export const AppTypeEnum = z.enum([
+  "marketing", // landing pages, marketing sites
+  "commerce", // storefronts, pricing, checkout
+  "content", // blogs, editorial, news
+  "docs", // documentation, knowledge bases
+  "app", // general web apps
+  "dashboard", // admin/analytics dashboards
+  "mobile", // mobile apps
+  "portfolio", // personal/creative showcases
+  "brand", // agency/brand sites
+]);
+export type AppType = z.infer<typeof AppTypeEnum>;
+
 export const DirectionSchema = z.object({
   id: z.string(),
   label: z.string(),
   personality: z.array(z.string()),
+  /** App-type families this direction fits; used to rank directions for a brief. */
+  appTypes: z.array(AppTypeEnum),
+  /** Descriptive aesthetic family, e.g. "minimal", "editorial", "grain-dark". */
+  aesthetic: z.string().optional(),
   colorScheme: z.enum(["light-first", "dark-first"]),
   color: z.object({
     accent: z.object({
@@ -19,7 +37,15 @@ export const DirectionSchema = z.object({
       hover: z.string(),
       muted: z.string(),
     }),
-    surface: z.object({ base: z.string(), raised: z.string(), border: z.string() }),
+    surface: z.object({
+      base: z.string(),
+      raised: z.string(),
+      border: z.string(),
+      // Optional surface texture overlay (the 2026 "grain" look). Default: none.
+      texture: z.enum(["none", "grain", "noise"]).optional(),
+      // How surfaces separate: hairline border, soft shadow, or flat. Default: border.
+      elevation: z.enum(["flat", "shadow", "border"]).optional(),
+    }),
     text: z.object({ primary: z.string(), secondary: z.string(), accent: z.string() }),
     semantic: z.object({ success: z.string(), danger: z.string(), warning: z.string() }),
   }),
@@ -42,6 +68,22 @@ export const DirectionSchema = z.object({
     cellPaddingX: z.string(),
     cellPaddingY: z.string(),
     sectionGap: z.string(),
+  }),
+  /**
+   * Motion tokens. Still deterministic — these are values an agent (or the
+   * preview) animates from; AI never renders the motion itself. Animate only
+   * transform/opacity, and always honor prefers-reduced-motion.
+   */
+  motion: z.object({
+    level: z.enum(["none", "subtle", "expressive"]),
+    durationFast: z.string(), // "120ms" — hover/press
+    durationBase: z.string(), // "220ms" — entrances/transitions
+    easingStandard: z.string(), // state changes, e.g. "cubic-bezier(0.2, 0, 0, 1)"
+    easingEntrance: z.string(), // reveals, e.g. "cubic-bezier(0.16, 1, 0.3, 1)"
+    hover: z.enum(["none", "lift", "glow", "scale"]),
+    press: z.enum(["none", "scale-down"]),
+    scrollReveal: z.enum(["none", "fade", "fade-up", "stagger"]),
+    respectsReducedMotion: z.literal(true), // non-negotiable
   }),
   provenance: z.object({
     seededFrom: z.string(), // preset id

@@ -5,6 +5,8 @@ export const brutalist = definePreset({
   id: "brutalist",
   label: "Brutalist",
   personality: ["bold", "raw", "high-contrast"],
+  appTypes: ["portfolio", "brand", "marketing"],
+  aesthetic: "brutalist",
   colorScheme: "light-first",
   color: {
     accent: {
@@ -33,6 +35,17 @@ export const brutalist = definePreset({
     cellPaddingX: "12px",
     cellPaddingY: "8px",
     sectionGap: "16px",
+  },
+  motion: {
+    level: "none",
+    durationFast: "0ms",
+    durationBase: "0ms",
+    easingStandard: "linear",
+    easingEntrance: "linear",
+    hover: "none",
+    press: "none",
+    scrollReveal: "none",
+    respectsReducedMotion: true,
   },
   provenance: { seededFrom: "brutalist", remixed: false },
 });

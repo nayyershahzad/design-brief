@@ -1,10 +1,26 @@
 import { useState } from "react";
+import type { AppType } from "@design-brief/core";
 
 export interface Brief {
+  /** Free-text label (e.g. "admin dashboard") — shown back to the user. */
   appType: string;
+  /** Structured family that drives which directions are seeded. */
+  appFamily: AppType;
   audience: string;
   personality: string[];
 }
+
+const APP_FAMILIES: { value: AppType; label: string }[] = [
+  { value: "marketing", label: "Marketing / landing" },
+  { value: "commerce", label: "E-commerce" },
+  { value: "content", label: "Content / blog" },
+  { value: "docs", label: "Docs / knowledge base" },
+  { value: "app", label: "Web app" },
+  { value: "dashboard", label: "Dashboard / admin" },
+  { value: "mobile", label: "Mobile app" },
+  { value: "portfolio", label: "Portfolio" },
+  { value: "brand", label: "Agency / brand" },
+];
 
 const SUGGESTED = [
   "precise",
@@ -26,6 +42,7 @@ const SUGGESTED = [
 
 export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
   const [appType, setAppType] = useState("admin dashboard");
+  const [appFamily, setAppFamily] = useState<AppType>("dashboard");
   const [audience, setAudience] = useState("power users");
   const [picked, setPicked] = useState<string[]>(["precise", "dense"]);
 
@@ -49,6 +66,22 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
           onChange={(e) => setAppType(e.target.value)}
           className="w-full border border-neutral-300 rounded px-3 py-2"
         />
+      </label>
+
+      <label className="block space-y-1">
+        <span className="text-sm font-medium">Category</span>
+        <select
+          value={appFamily}
+          onChange={(e) => setAppFamily(e.target.value as AppType)}
+          className="w-full border border-neutral-300 rounded px-3 py-2 bg-white"
+        >
+          {APP_FAMILIES.map((f) => (
+            <option key={f.value} value={f.value}>
+              {f.label}
+            </option>
+          ))}
+        </select>
+        <span className="text-[11px] text-neutral-400">Steers which directions are seeded.</span>
       </label>
 
       <label className="block space-y-1">
@@ -81,7 +114,7 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
       </div>
 
       <button
-        onClick={() => onSubmit({ appType, audience, personality: picked })}
+        onClick={() => onSubmit({ appType, appFamily, audience, personality: picked })}
         className="bg-neutral-900 text-white rounded px-4 py-2 font-medium hover:bg-neutral-800"
       >
         Show directions →

@@ -8,13 +8,17 @@ For developers who are strong on backend and weak on UI: stop guessing at a desi
 
 ## Quick start
 
-Requires **Node 22+** and **git**. From inside any project folder:
+Requires **Node 22+**. From inside any project folder:
+
+```bash
+npx design-directions@latest play
+```
+
+Published to npm as **design-directions** (the CLI command it installs is `design-brief`). You can also run the latest source straight from GitHub — this needs **git** and builds once (~30–60s):
 
 ```bash
 npx github:nayyershahzad/design-brief play
 ```
-
-The first run clones and builds once (~30–60s), then it's cached. (A shorter npm-registry command is planned.)
 
 This boots a local playground at `http://localhost:4321`, detects your project, and lets you compare design directions side by side. Lock one and it writes:
 
@@ -68,16 +72,19 @@ Every direction is one JSON object:
   "id": "terminal",
   "label": "Terminal",
   "personality": ["precise", "dense", "technical"],
+  "appTypes": ["app", "dashboard"],
+  "aesthetic": "minimal",
   "colorScheme": "dark-first",
-  "color": { "accent": {}, "surface": {}, "text": {}, "semantic": {} },
+  "color": { "accent": {}, "surface": { "texture": "none", "elevation": "border" }, "text": {}, "semantic": {} },
   "typography": { "fontSans": "", "fontMono": "", "scale": [], "weights": [] },
   "shape": { "radius": "", "radiusLarge": "", "borderWidth": "" },
   "density": { "level": "", "rowHeight": "" },
+  "motion": { "level": "subtle", "durationBase": "220ms", "easingStandard": "", "hover": "lift", "scrollReveal": "fade-up", "respectsReducedMotion": true },
   "provenance": { "seededFrom": "terminal", "remixed": false }
 }
 ```
 
-The schema is the contract. Previews render from it, exports serialize from it, presets are instances of it.
+The schema is the contract. Previews render from it, exports serialize from it, presets are instances of it. `appTypes` steers which directions a brief seeds; `motion` exports as CSS/Tailwind transition tokens + a reduced-motion-safe utility layer + a Motion section in `DESIGN_SPEC.md` (the tool never animates with AI — motion is just tokens an agent or the preview renders). Optional `surface.texture` adds a 2026-style grain overlay.
 
 ## Project layout
 

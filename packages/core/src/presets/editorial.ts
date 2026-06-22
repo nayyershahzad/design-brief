@@ -5,6 +5,8 @@ export const editorial = definePreset({
   id: "editorial",
   label: "Editorial",
   personality: ["refined", "spacious", "typographic"],
+  appTypes: ["content", "docs", "portfolio", "brand"],
+  aesthetic: "editorial",
   colorScheme: "light-first",
   color: {
     accent: {
@@ -33,6 +35,17 @@ export const editorial = definePreset({
     cellPaddingX: "20px",
     cellPaddingY: "14px",
     sectionGap: "32px",
+  },
+  motion: {
+    level: "subtle",
+    durationFast: "120ms",
+    durationBase: "280ms",
+    easingStandard: "cubic-bezier(0.4, 0, 0.2, 1)",
+    easingEntrance: "cubic-bezier(0.16, 1, 0.3, 1)",
+    hover: "none",
+    press: "none",
+    scrollReveal: "fade",
+    respectsReducedMotion: true,
   },
   provenance: { seededFrom: "editorial", remixed: false },
 });

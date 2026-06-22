@@ -1,5 +1,5 @@
 {
-  "name": "design-brief",
+  "name": "design-directions",
   "version": "0.1.0",
   "type": "module",
   "description": "Explore UI design directions locally, lock one, and export shadcn-native tokens + a DESIGN_SPEC.md contract.",

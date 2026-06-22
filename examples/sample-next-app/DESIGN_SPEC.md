@@ -9,6 +9,8 @@
 |---|---|
 | Locked direction | `Clean Teal` (`clean-teal`) |
 | Personality | clean · calm · modern |
+| App types | app, dashboard, marketing |
+| Aesthetic | minimal |
 | Color scheme | light-first |
 | Seeded from | `clean-teal` |
 | Remixed | no |
@@ -23,6 +25,12 @@ A clean · calm · modern surface. A clean light interface built around a single
 ```json
 {
   "direction": "clean-teal",
+  "appTypes": [
+    "app",
+    "dashboard",
+    "marketing"
+  ],
+  "aesthetic": "minimal",
   "colorScheme": "light-first",
   "color": {
     "accent": {
@@ -35,7 +43,8 @@ A clean · calm · modern surface. A clean light interface built around a single
     "surface": {
       "base": "#FFFFFF",
       "raised": "#F6F9F8",
-      "border": "#DDE6E3"
+      "border": "#DDE6E3",
+      "elevation": "shadow"
     },
     "text": {
       "primary": "#1A2421",
@@ -76,6 +85,17 @@ A clean · calm · modern surface. A clean light interface built around a single
     "cellPaddingX": "12px",
     "cellPaddingY": "8px",
     "sectionGap": "16px"
+  },
+  "motion": {
+    "level": "subtle",
+    "durationFast": "120ms",
+    "durationBase": "220ms",
+    "easingStandard": "cubic-bezier(0.2, 0, 0, 1)",
+    "easingEntrance": "cubic-bezier(0.16, 1, 0.3, 1)",
+    "hover": "lift",
+    "press": "scale-down",
+    "scrollReveal": "fade-up",
+    "respectsReducedMotion": true
   }
 }
 ```
@@ -97,6 +117,31 @@ A clean · calm · modern surface. A clean light interface built around a single
   --ring: 162 87% 35%;
   --radius: 0.5rem;
 }
+
+:root {
+  --db-duration-fast: 120ms;
+  --db-duration-base: 220ms;
+  --db-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --db-ease-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .db-transition {
+    transition:
+      transform var(--db-duration-base) var(--db-ease-standard),
+      opacity var(--db-duration-base) var(--db-ease-standard);
+  }
+  .db-hover:hover { transform: translateY(-2px); }
+  .db-pressable:active { transform: scale(0.98); }
+  .db-reveal {
+    opacity: 0;
+    animation: db-reveal var(--db-duration-base) var(--db-ease-entrance) forwards;
+  }
+  @keyframes db-reveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: none; }
+  }
+}
 ```
 
 ## Hard constraints (agent must honor)
@@ -105,7 +150,7 @@ A clean · calm · modern surface. A clean light interface built around a single
 - One accent only. `#0CA678` is reserved for primary actions and live/changing data. Do not introduce a second accent hue.
 - Numerals and tabular data render in `IBM Plex Mono` with `font-variant-numeric: tabular-nums` (numerals and code).
 - Radius never exceeds `12px`. No pill buttons; no rounding beyond the token.
-- Borders are `1px`, color `#DDE6E3`. Use borders, not drop shadows, for separation.
+- Separation via soft shadows is intended (`elevation: shadow`); keep the `1px` `#DDE6E3` border subtle.
 - Balanced density: table rows `40px`. Do not pad out to looser spacing.
 - Accessibility floor: text-on-surface contrast >= 4.5:1. Secondary text `#5C6B66` is intended for use on `#FFFFFF`.
 
@@ -115,6 +160,14 @@ A clean · calm · modern surface. A clean light interface built around a single
 - Tables: the primary surface. Header row `--muted-foreground` uppercase 12px; body rows 14px; numeric columns mono + right-aligned.
 - Metric cards: label 12px `--muted-foreground` uppercase, value 30px mono `--foreground`, delta in semantic color.
 - Inputs: 40px height, `1px` border, focus ring `--primary`, no glow.
+
+## Motion
+
+- Level: **subtle**. Animate ONLY `transform` and `opacity` (never width/height/top/left) to stay 60fps.
+- Durations: fast `120ms` (hover/press), base `220ms` (entrances/transitions).
+- Easing: `cubic-bezier(0.2, 0, 0, 1)` for state changes, `cubic-bezier(0.16, 1, 0.3, 1)` for entrances/reveals.
+- Hover: lift 2px (translateY(-2px)). Press: scale to 0.98 on press. Scroll reveal: fade + 10px rise on enter.
+- ALWAYS wrap motion in `@media (prefers-reduced-motion: no-preference)` with a static fallback. `globals.css` ships ready-made `.db-transition` / `.db-hover` / `.db-pressable` / `.db-reveal` utilities.
 
 ## What changed from the seed preset
 

@@ -5,6 +5,8 @@ export const terminal = definePreset({
   id: "terminal",
   label: "Terminal",
   personality: ["precise", "dense", "technical"],
+  appTypes: ["app", "dashboard"],
+  aesthetic: "minimal",
   colorScheme: "dark-first",
   color: {
     accent: {
@@ -33,6 +35,17 @@ export const terminal = definePreset({
     cellPaddingX: "10px",
     cellPaddingY: "6px",
     sectionGap: "12px",
+  },
+  motion: {
+    level: "subtle",
+    durationFast: "100ms",
+    durationBase: "180ms",
+    easingStandard: "cubic-bezier(0.2, 0, 0, 1)",
+    easingEntrance: "cubic-bezier(0.16, 1, 0.3, 1)",
+    hover: "lift",
+    press: "scale-down",
+    scrollReveal: "fade",
+    respectsReducedMotion: true,
   },
   provenance: { seededFrom: "terminal", remixed: false },
 });

@@ -21,6 +21,14 @@
       "borderWidth": {
         "hairline": "1px"
       },
+      "transitionDuration": {
+        "fast": "120ms",
+        "DEFAULT": "220ms"
+      },
+      "transitionTimingFunction": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)",
+        "entrance": "cubic-bezier(0.16, 1, 0.3, 1)"
+      },
       "colors": {
         "accent": {
           "DEFAULT": "#0CA678",

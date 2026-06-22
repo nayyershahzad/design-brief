@@ -5,6 +5,8 @@ export const cleanTeal = definePreset({
   id: "clean-teal",
   label: "Clean Teal",
   personality: ["clean", "calm", "modern"],
+  appTypes: ["app", "dashboard", "marketing"],
+  aesthetic: "minimal",
   colorScheme: "light-first",
   color: {
     accent: {
@@ -14,7 +16,7 @@ export const cleanTeal = definePreset({
       hover: "#12B886",
       muted: "#E6FCF5",
     },
-    surface: { base: "#FFFFFF", raised: "#F6F9F8", border: "#DDE6E3" },
+    surface: { base: "#FFFFFF", raised: "#F6F9F8", border: "#DDE6E3", elevation: "shadow" },
     text: { primary: "#1A2421", secondary: "#5C6B66", accent: "#0CA678" },
     semantic: { success: "#0CA678", danger: "#E03131", warning: "#F59F00" },
   },
@@ -33,6 +35,17 @@ export const cleanTeal = definePreset({
     cellPaddingX: "12px",
     cellPaddingY: "8px",
     sectionGap: "16px",
+  },
+  motion: {
+    level: "subtle",
+    durationFast: "120ms",
+    durationBase: "220ms",
+    easingStandard: "cubic-bezier(0.2, 0, 0, 1)",
+    easingEntrance: "cubic-bezier(0.16, 1, 0.3, 1)",
+    hover: "lift",
+    press: "scale-down",
+    scrollReveal: "fade-up",
+    respectsReducedMotion: true,
   },
   provenance: { seededFrom: "clean-teal", remixed: false },
 });
