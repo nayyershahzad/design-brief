@@ -15,6 +15,10 @@
   "bin": {
     "design-brief": "packages/cli/dist/bin.js"
   },
+  "files": [
+    "packages/cli/dist",
+    "packages/playground/dist"
+  ],
   "scripts": {
     "build": "npm run build -w @design-brief/core && node scripts/build-remix.mjs && npm run build -w @design-brief/cli && npm run build -w @design-brief/playground",
     "prepare": "npm run build",
