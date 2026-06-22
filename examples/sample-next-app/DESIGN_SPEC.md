@@ -220,12 +220,25 @@ A clean · calm · modern surface. A clean light interface built around a single
 - Hover: lift 2px (translateY(-2px)). Press: scale to 0.98 on press. Scroll reveal: fade + 10px rise on enter.
 - ALWAYS wrap motion in `@media (prefers-reduced-motion: no-preference)` with a static fallback. `globals.css` ships ready-made `.db-transition` / `.db-hover` / `.db-pressable` / `.db-reveal` utilities.
 
+
 ## Accessibility
 
 - Contrast: `#1A2421` on `#FFFFFF`, and `#FFFFFF` on `#0CA678`, are intended to meet >= 4.5:1 (>= 3:1 for large text). Use secondary text `#5C6B66` only at >= 14px.
 - Focus: every interactive element shows a visible focus ring in `--ring`; never remove outlines without an equivalent replacement.
 - Motion: honor `prefers-reduced-motion` (see Motion). Provide a static, fully-usable fallback.
 - Targets: interactive targets are at least the row height (`40px`); on mobile, at least 44px.
+
+## Build it with an AI generator
+
+Hand all three files — this spec, `globals.css`, and `design-brief.theme.json` — to a code generator, with a prompt like:
+
+> Build [what you're building] as a **app** using shadcn/ui + Tailwind. Treat `DESIGN_SPEC.md` as the binding design contract: use only its tokens, follow its Hard constraints, Do/Don't, and Component scope, wire `globals.css` and `design-brief.theme.json` exactly as the Install section says, and implement the Motion section while honoring `prefers-reduced-motion`. Do not introduce colors, fonts, radii, spacing, or motion that aren't in this spec.
+
+Tool notes:
+
+- **v0 (Vercel):** speaks shadcn/ui + Tailwind natively — paste the CSS-variable block, the theme JSON, and this spec; generated components inherit the tokens directly.
+- **Framer:** map the CSS variables to Framer color/text styles and the radius/spacing tokens to Framer tokens; recreate the Motion section with Framer Motion (use the easing tokens as the spring/bezier values).
+- **Claude Code / Cursor / coding agents:** drop the three files into the repo and point the agent at `DESIGN_SPEC.md` — it carries the wiring steps, component scope, and constraints to build from.
 
 ## What changed from the seed preset
 

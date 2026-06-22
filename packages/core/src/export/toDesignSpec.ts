@@ -230,6 +230,19 @@ export function toDesignSpec(d: Direction): string {
         ? `Remixed from the \`${p.seededFrom}\` preset.`
         : `Locked directly from the \`${p.seededFrom}\` preset with no remix.`;
 
+  const primaryAppType = d.appTypes[0] ?? "app";
+  const handoffSection = `## Build it with an AI generator
+
+Hand all three files — this spec, \`globals.css\`, and \`design-brief.theme.json\` — to a code generator, with a prompt like:
+
+> Build [what you're building] as a **${primaryAppType}** using shadcn/ui + Tailwind. Treat \`DESIGN_SPEC.md\` as the binding design contract: use only its tokens, follow its Hard constraints, Do/Don't, and Component scope, wire \`globals.css\` and \`design-brief.theme.json\` exactly as the Install section says, and implement the Motion section while honoring \`prefers-reduced-motion\`. Do not introduce colors, fonts, radii, spacing, or motion that aren't in this spec.
+
+Tool notes:
+
+- **v0 (Vercel):** speaks shadcn/ui + Tailwind natively — paste the CSS-variable block, the theme JSON, and this spec; generated components inherit the tokens directly.
+- **Framer:** map the CSS variables to Framer color/text styles and the radius/spacing tokens to Framer tokens; recreate the Motion section with Framer Motion (use the easing tokens as the spring/bezier values).
+- **Claude Code / Cursor / coding agents:** drop the three files into the repo and point the agent at \`DESIGN_SPEC.md\` — it carries the wiring steps, component scope, and constraints to build from.`;
+
   return `# Design Spec — Locked Direction
 
 > Generated artifact. This block is the contract between the approved design and the coding agent.
@@ -322,6 +335,8 @@ ${textureSection}
 - Focus: every interactive element shows a visible focus ring in \`--ring\`; never remove outlines without an equivalent replacement.
 - Motion: honor \`prefers-reduced-motion\` (see Motion). Provide a static, fully-usable fallback.
 - Targets: interactive targets are at least the row height (\`${d.density.rowHeight}\`); on mobile, at least 44px.
+
+${handoffSection}
 
 ## What changed from the seed preset
 
