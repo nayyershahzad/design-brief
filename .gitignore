@@ -9,3 +9,6 @@ coverage
 
 # Stray credential file accidentally copied into the brief folder — never commit.
 user.md
+
+# Internal build/agent spec — kept local, not published to the public repo.
+CLAUDE.md
