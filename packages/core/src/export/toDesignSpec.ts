@@ -133,6 +133,32 @@ export function toDesignSpec(d: Direction): string {
           "- ALWAYS wrap motion in `@media (prefers-reduced-motion: no-preference)` with a static fallback. `globals.css` ships ready-made `.db-transition` / `.db-hover` / `.db-pressable` / `.db-reveal` utilities.",
         ].join("\n");
 
+  const advLines: string[] = [];
+  if (m.scroll?.progress)
+    advLines.push(
+      "- Scroll progress: a 3px `--primary` bar fixed at the top, scaled 0→1 with page scroll. Use the shipped `.db-scroll-progress` (CSS `animation-timeline: scroll(root block)`); JS fallback: `scaleX = scrollY / (scrollHeight - innerHeight)`.",
+    );
+  if (m.scroll && m.scroll.parallax !== "none") {
+    const depth = m.scroll.parallax === "bold" ? "40px" : "12px";
+    advLines.push(
+      `- Parallax (**${m.scroll.parallax}**, ±${depth}): hero/media drifts slower than scroll via \`.db-parallax\` (\`animation-timeline: view()\`). Keep it subtle; never parallax body text.`,
+    );
+  }
+  if (m.kineticText && m.kineticText !== "none") {
+    const k = m.kineticText;
+    const how =
+      k === "shimmer"
+        ? "apply `.db-kinetic-shimmer` to the headline — an accent highlight sweeps across the text."
+        : k === "rise-words"
+          ? "wrap each word of the headline in a `<span>` under `.db-kinetic`; words fade + rise with an 80ms stagger."
+          : "wrap each character of the headline in a `<span>` under `.db-kinetic`; characters fade in with a 40ms stagger.";
+    advLines.push(`- Kinetic headline (**${k}**): ${how}`);
+  }
+  const advancedMotionSection =
+    advLines.length === 0
+      ? ""
+      : `\n### Advanced motion\n\n${advLines.join("\n")}\n- All scroll-driven effects must no-op under \`prefers-reduced-motion\`; the static page must remain fully usable.\n`;
+
   const textureSection =
     texture === "none"
       ? ""
@@ -288,6 +314,7 @@ ${componentScope}
 ## Motion
 
 ${motionSection}
+${advancedMotionSection}
 ${textureSection}
 ## Accessibility
 

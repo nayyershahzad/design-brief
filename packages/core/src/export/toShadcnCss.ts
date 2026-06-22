@@ -113,9 +113,80 @@ function textureCss(d: Direction): string {
 }
 
 /**
+ * Page-level "advanced" motion (scroll progress, parallax, kinetic headlines)
+ * using CSS scroll-driven animations (`animation-timeline`), reduced-motion
+ * guarded. Only emitted when the direction opts in via `motion.scroll` /
+ * `motion.kineticText`.
+ */
+function advancedMotionCss(d: Direction): string {
+  const m = d.motion;
+  const scroll = m.scroll;
+  const kinetic = m.kineticText;
+  const wantsScrollBar = !!scroll?.progress;
+  const wantsParallax = !!scroll && scroll.parallax !== "none";
+  const wantsKinetic = !!kinetic && kinetic !== "none";
+  if (!wantsScrollBar && !wantsParallax && !wantsKinetic) return "";
+
+  const rules: string[] = [];
+
+  if (wantsScrollBar) {
+    rules.push(
+      "  .db-scroll-progress {\n" +
+        "    position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 50;\n" +
+        "    transform-origin: 0 50%; background: hsl(var(--primary));\n" +
+        "    animation: db-progress auto linear; animation-timeline: scroll(root block);\n" +
+        "  }\n" +
+        "  @keyframes db-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }",
+    );
+  }
+  if (wantsParallax) {
+    const depth = scroll!.parallax === "bold" ? "40px" : "12px";
+    rules.push(
+      "  .db-parallax {\n" +
+        "    animation: db-parallax auto linear; animation-timeline: view(); animation-range: cover;\n" +
+        "    will-change: transform;\n" +
+        "  }\n" +
+        `  @keyframes db-parallax { from { transform: translateY(${depth}); } to { transform: translateY(-${depth}); } }`,
+    );
+  }
+  if (wantsKinetic) {
+    if (kinetic === "shimmer") {
+      rules.push(
+        "  .db-kinetic-shimmer {\n" +
+          "    background: linear-gradient(90deg, currentColor 40%, hsl(var(--primary)) 50%, currentColor 60%);\n" +
+          "    background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent;\n" +
+          "    animation: db-shimmer 2.4s linear infinite;\n" +
+          "  }\n" +
+          "  @keyframes db-shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }",
+      );
+    } else {
+      // rise-words / fade-chars: wrap each word/char in a span under .db-kinetic.
+      const frame =
+        kinetic === "rise-words"
+          ? "from { opacity: 0; transform: translateY(0.4em); } to { opacity: 1; transform: none; }"
+          : "from { opacity: 0; } to { opacity: 1; }";
+      const step = kinetic === "rise-words" ? 80 : 40;
+      const delays = [2, 3, 4, 5]
+        .map((n) => `  .db-kinetic > *:nth-child(${n}) { animation-delay: ${(n - 1) * step}ms; }`)
+        .join("\n");
+      rules.push(
+        "  .db-kinetic > * {\n" +
+          "    display: inline-block; opacity: 0;\n" +
+          "    animation: db-kinetic var(--db-duration-base) var(--db-ease-entrance) forwards;\n" +
+          "  }\n" +
+          `  @keyframes db-kinetic { ${frame} }\n` +
+          delays,
+      );
+    }
+  }
+  return `@media (prefers-reduced-motion: no-preference) {\n${rules.join("\n")}\n}`;
+}
+
+/**
  * Emit the shadcn `:root` (+ `.dark` for dark-first) color block, then motion
- * tokens, opt-in motion utilities, and an optional grain overlay. Everything is
- * derived from the Direction so it can't drift; deterministic.
+ * tokens, opt-in motion utilities, an optional grain overlay, and optional
+ * advanced (scroll/parallax/kinetic) motion. Everything is derived from the
+ * Direction so it can't drift; deterministic.
  */
 export function toShadcnCss(d: Direction): string {
   const entries = cssVars(d);
@@ -126,5 +197,7 @@ export function toShadcnCss(d: Direction): string {
   if (util) parts.push(util);
   const tex = textureCss(d);
   if (tex) parts.push(tex);
+  const adv = advancedMotionCss(d);
+  if (adv) parts.push(adv);
   return parts.join("\n\n") + "\n";
 }

@@ -84,6 +84,16 @@ export const DirectionSchema = z.object({
     press: z.enum(["none", "scale-down"]),
     scrollReveal: z.enum(["none", "fade", "fade-up", "stagger"]),
     respectsReducedMotion: z.literal(true), // non-negotiable
+    // Optional page-level effects (the "jaw-dropping" layer). Absent = off.
+    // Implemented with CSS scroll-driven animations (animation-timeline), with a
+    // reduced-motion fallback. See the Advanced motion section of DESIGN_SPEC.md.
+    scroll: z
+      .object({
+        progress: z.boolean(), // a top scroll-progress bar
+        parallax: z.enum(["none", "subtle", "bold"]), // hero/media parallax depth
+      })
+      .optional(),
+    kineticText: z.enum(["none", "rise-words", "fade-chars", "shimmer"]).optional(),
   }),
   provenance: z.object({
     seededFrom: z.string(), // preset id

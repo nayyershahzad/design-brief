@@ -50,6 +50,8 @@ export const voiceLight = definePreset({
     press: "scale-down",
     scrollReveal: "fade-up",
     respectsReducedMotion: true,
+    scroll: { progress: true, parallax: "none" },
+    kineticText: "fade-chars",
   },
   provenance: { seededFrom: "voice-light", remixed: false },
 });

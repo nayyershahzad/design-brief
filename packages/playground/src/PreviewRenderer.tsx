@@ -50,9 +50,58 @@ function previewCss(d: Direction, scope: string): string {
           `@keyframes dbPvReveal{from{${from}}to{opacity:1;transform:none;}}`,
       );
     }
+    const k = m.kineticText;
+    if (k && k !== "none") {
+      if (k === "shimmer") {
+        rules.push(
+          `.${scope} .db-kinetic-shimmer{background:linear-gradient(90deg,currentColor 40%,${d.color.accent.primary} 50%,currentColor 60%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:dbKin 2.4s linear infinite;}` +
+            `@keyframes dbKin{from{background-position:200% 0}to{background-position:-200% 0}}`,
+        );
+      } else {
+        const frame =
+          k === "rise-words"
+            ? "from{opacity:0;transform:translateY(0.4em)}to{opacity:1;transform:none}"
+            : "from{opacity:0}to{opacity:1}";
+        const step = k === "rise-words" ? 80 : 40;
+        rules.push(
+          `.${scope} .db-kinetic>*{display:inline-block;white-space:pre;opacity:0;animation:dbKin ${m.durationBase} ${m.easingEntrance} forwards;}` +
+            `@keyframes dbKin{${frame}}` +
+            [2, 3, 4, 5, 6, 7, 8].map((n) => `.${scope} .db-kinetic>*:nth-child(${n}){animation-delay:${(n - 1) * step}ms}`).join(""),
+        );
+      }
+    }
     out.push(`@media (prefers-reduced-motion: no-preference){${rules.join("")}}`);
   }
   return out.join("");
+}
+
+const HEADLINE = "Ship it faster.";
+
+/** Split a headline into spans for the kinetic effect (by word or character). */
+function kineticHeadline(d: Direction) {
+  const k = d.motion.kineticText;
+  const style: CSSProperties = {
+    fontFamily: d.typography.fontSans,
+    fontSize: `${d.typography.scale[d.typography.scale.length - 1] ?? 28}px`,
+    fontWeight: d.typography.weights[d.typography.weights.length - 1] ?? 600,
+    color: d.color.text.primary,
+    lineHeight: 1.1,
+  };
+  if (k === "shimmer") {
+    return (
+      <div className="db-kinetic-shimmer" style={style}>
+        {HEADLINE}
+      </div>
+    );
+  }
+  const parts = k === "rise-words" ? HEADLINE.split(/(\s+)/) : HEADLINE.split("");
+  return (
+    <div className="db-kinetic" style={style}>
+      {parts.map((c, i) => (
+        <span key={i}>{c}</span>
+      ))}
+    </div>
+  );
 }
 
 export function PreviewRenderer({ direction: d }: { direction: Direction }) {
@@ -87,6 +136,9 @@ export function PreviewRenderer({ direction: d }: { direction: Direction }) {
         className="m-reveal"
         style={s({ padding: d.density.cellPaddingX, display: "grid", gap: d.density.sectionGap })}
       >
+        {/* kinetic headline (M8) — only for directions that opt into kinetic text */}
+        {d.motion.kineticText && d.motion.kineticText !== "none" && kineticHeadline(d)}
+
         {/* toolbar */}
         <div style={s({ display: "flex", gap: d.density.cellPaddingX, alignItems: "center" })}>
           <input readOnly value="" placeholder={input.placeholder} style={s({ ...input.style, flex: "1" })} />

@@ -46,6 +46,8 @@ export const warmSaas = definePreset({
     press: "scale-down",
     scrollReveal: "fade-up",
     respectsReducedMotion: true,
+    scroll: { progress: false, parallax: "subtle" },
+    kineticText: "shimmer",
   },
   provenance: { seededFrom: "warm-saas", remixed: false },
 });

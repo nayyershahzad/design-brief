@@ -50,6 +50,8 @@ export const grainDark = definePreset({
     press: "scale-down",
     scrollReveal: "stagger",
     respectsReducedMotion: true,
+    scroll: { progress: true, parallax: "subtle" },
+    kineticText: "rise-words",
   },
   provenance: { seededFrom: "grain-dark", remixed: false },
 });
