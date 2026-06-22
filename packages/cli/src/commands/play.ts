@@ -6,6 +6,8 @@ import sirv from "sirv";
 import open from "open";
 import { detectContext } from "../detect.js";
 import { safeWrite, type WriteResult } from "../writeFiles.js";
+import { getRemixStatus, runRemix, type RemixBrief, type RemixStatus } from "../remixBridge.js";
+import type { Direction } from "@design-brief/core";
 
 export interface PlayOptions {
   port: string;
@@ -50,12 +52,39 @@ export async function playCommand(opts: PlayOptions): Promise<void> {
   const assets = sirv(dist, { dev: false, single: true });
   const port = Number(opts.port) || 4321;
 
+  // Resolved once: package presence + env are fixed for the process lifetime.
+  // Absence of remix (deleted package, or no provider key) is a silent no-op —
+  // the playground just hides the remix control. core/playground never see this.
+  const remix: RemixStatus = await getRemixStatus();
+
   const server = http.createServer((req, res) => {
     const url = req.url ?? "/";
 
     if (url === "/api/context") {
       res.setHeader("content-type", "application/json");
-      res.end(JSON.stringify(detectContext(process.cwd())));
+      res.end(JSON.stringify({ ...detectContext(process.cwd()), remix }));
+      return;
+    }
+
+    if (url === "/api/remix" && req.method === "POST") {
+      if (!remix.available) {
+        res.statusCode = 501;
+        res.setHeader("content-type", "application/json");
+        res.end(JSON.stringify({ error: "AI remix is not available." }));
+        return;
+      }
+      void readBody(req).then(async (body) => {
+        try {
+          const { direction, brief } = JSON.parse(body) as { direction: Direction; brief: RemixBrief };
+          const result = await runRemix(direction, brief);
+          res.setHeader("content-type", "application/json");
+          res.end(JSON.stringify({ direction: result }));
+        } catch (err) {
+          res.statusCode = 400;
+          res.setHeader("content-type", "application/json");
+          res.end(JSON.stringify({ error: err instanceof Error ? err.message : String(err) }));
+        }
+      });
       return;
     }
 
@@ -98,7 +127,8 @@ export async function playCommand(opts: PlayOptions): Promise<void> {
         `  ➜  ${at}\n` +
         `  project: ${ctx.projectRoot}\n` +
         `  exports will land in: ${ctx.targets.css}, ${ctx.targets.tailwind}, ${ctx.targets.spec}\n` +
-        `  (existing files are never overwritten without --force)\n`,
+        `  (existing files are never overwritten without --force)\n` +
+        `  AI remix: ${remix.available ? `on · ${remix.label}` : "off (presets only)"}\n`,
     );
     if (opts.open) {
       open(at).catch(() => console.log("  (could not open a browser automatically)"));

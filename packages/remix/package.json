@@ -1,0 +1,33 @@
+{
+  "name": "@design-brief/remix",
+  "version": "0.0.0",
+  "type": "module",
+  "description": "design-brief OPTIONAL remix: provider-neutral AI authoring of new Directions. Isolated — core, playground, and cli never import this; delete it and the tool still works.",
+  "license": "MIT",
+  "author": "Nayyer Shahzad",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@design-brief/core": "*",
+    "@anthropic-ai/sdk": "^0.105.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  }
+}
