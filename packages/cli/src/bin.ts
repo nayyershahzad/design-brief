@@ -1,4 +1,5 @@
-#!/usr/bin/env node
+// The shebang is added by the esbuild bundle step (build.mjs), not here, to
+// avoid a duplicate when bundling.
 import { Command } from "commander";
 import { playCommand } from "./commands/play.js";
 import { initCommand } from "./commands/init.js";
