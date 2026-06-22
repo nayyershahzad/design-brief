@@ -1,0 +1,37 @@
+{
+  "theme": {
+    "extend": {
+      "fontFamily": {
+        "sans": [
+          "Inter",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ],
+        "mono": [
+          "IBM Plex Mono",
+          "ui-monospace",
+          "monospace"
+        ]
+      },
+      "borderRadius": {
+        "DEFAULT": "8px",
+        "lg": "12px"
+      },
+      "borderWidth": {
+        "hairline": "1px"
+      },
+      "colors": {
+        "accent": {
+          "DEFAULT": "#0CA678",
+          "foreground": "#FFFFFF",
+          "hover": "#12B886",
+          "muted": "#E6FCF5"
+        },
+        "success": "#0CA678",
+        "danger": "#E03131",
+        "warning": "#F59F00"
+      }
+    }
+  }
+}

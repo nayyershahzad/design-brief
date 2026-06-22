@@ -1,0 +1,67 @@
+{
+  "id": "clean-teal",
+  "label": "Clean Teal",
+  "personality": [
+    "clean",
+    "calm",
+    "modern"
+  ],
+  "colorScheme": "light-first",
+  "color": {
+    "accent": {
+      "ramp": "teal",
+      "primary": "#0CA678",
+      "primaryForeground": "#FFFFFF",
+      "hover": "#12B886",
+      "muted": "#E6FCF5"
+    },
+    "surface": {
+      "base": "#FFFFFF",
+      "raised": "#F6F9F8",
+      "border": "#DDE6E3"
+    },
+    "text": {
+      "primary": "#1A2421",
+      "secondary": "#5C6B66",
+      "accent": "#0CA678"
+    },
+    "semantic": {
+      "success": "#0CA678",
+      "danger": "#E03131",
+      "warning": "#F59F00"
+    }
+  },
+  "typography": {
+    "fontSans": "Inter",
+    "fontMono": "IBM Plex Mono",
+    "monoUsage": "numerals and code",
+    "baseSize": "14px",
+    "scale": [
+      12,
+      14,
+      17,
+      22,
+      30
+    ],
+    "weights": [
+      400,
+      500
+    ]
+  },
+  "shape": {
+    "radius": "8px",
+    "radiusLarge": "12px",
+    "borderWidth": "1px"
+  },
+  "density": {
+    "level": "balanced",
+    "rowHeight": "40px",
+    "cellPaddingX": "12px",
+    "cellPaddingY": "8px",
+    "sectionGap": "16px"
+  },
+  "provenance": {
+    "seededFrom": "clean-teal",
+    "remixed": false
+  }
+}

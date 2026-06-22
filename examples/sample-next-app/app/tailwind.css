@@ -1,0 +1,5 @@
+/* Hand-owned Tailwind entry. design-brief NEVER touches this file. */
+/* The shadcn token layer lives in ./globals.css, which design-brief regenerates. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

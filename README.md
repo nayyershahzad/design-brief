@@ -16,15 +16,15 @@ npx design-brief@latest play
 This boots a local playground at `http://localhost:4321`, detects your project, and lets you compare design directions side by side. Lock one and it writes:
 
 - `globals.css` — shadcn `:root` + `.dark` variable blocks
-- `tailwind.config` — `theme.extend` additions
+- `design-brief.theme.json` — `theme.extend` additions to merge into your `tailwind.config`
 - `DESIGN_SPEC.md` — the human-readable design contract (intent + hard constraints + provenance)
 
-The first two are machine-owned (regenerate freely). The spec is the human contract — it changes only when you re-lock a direction.
+The first two are machine-owned (regenerate freely) — so keep your hand-authored Tailwind directives in a separate file (see `examples/sample-next-app`). The spec is the human contract — it changes only when you re-lock a direction.
 
 ## Contributor setup
 
 ```bash
-git clone https://github.com/<you>/design-brief
+git clone https://github.com/nayyershahzad/design-brief
 cd design-brief
 npm install
 npm run dev        # same playground, against the source
@@ -62,12 +62,15 @@ Every direction is one JSON object:
 
 ```json
 {
-  "direction": "terminal",
+  "id": "terminal",
+  "label": "Terminal",
+  "personality": ["precise", "dense", "technical"],
   "colorScheme": "dark-first",
   "color": { "accent": {}, "surface": {}, "text": {}, "semantic": {} },
   "typography": { "fontSans": "", "fontMono": "", "scale": [], "weights": [] },
-  "shape": { "radius": "", "borderWidth": "" },
-  "density": { "level": "", "rowHeight": "" }
+  "shape": { "radius": "", "radiusLarge": "", "borderWidth": "" },
+  "density": { "level": "", "rowHeight": "" },
+  "provenance": { "seededFrom": "terminal", "remixed": false }
 }
 ```
 

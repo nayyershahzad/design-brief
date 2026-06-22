@@ -1,0 +1,14 @@
+:root {
+  --background: 0 0% 100%;
+  --foreground: 162 16% 12%;
+  --card: 160 20% 97%;
+  --card-foreground: 162 16% 12%;
+  --primary: 162 87% 35%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 161 79% 95%;
+  --muted-foreground: 160 8% 39%;
+  --border: 160 15% 88%;
+  --input: 160 15% 88%;
+  --ring: 162 87% 35%;
+  --radius: 0.5rem;
+}
