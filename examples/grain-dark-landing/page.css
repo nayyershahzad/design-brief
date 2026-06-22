@@ -38,7 +38,8 @@ body {
 /* ---- nav ---- */
 .nav {
   position: sticky; top: 0; z-index: 50;
-  background: color-mix(in srgb, hsl(var(--background)) 72%, transparent);
+  background: hsl(var(--background) / 0.72); /* Safari-safe alpha; no color-mix */
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid hsl(var(--border));
 }
@@ -54,8 +55,8 @@ body {
 .hero-mesh {
   position: absolute; inset: -30% 0 auto 0; height: 900px; z-index: -1;
   background:
-    radial-gradient(50% 40% at 70% 10%, color-mix(in srgb, hsl(var(--primary)) 28%, transparent) 0%, transparent 70%),
-    radial-gradient(40% 35% at 20% 0%, color-mix(in srgb, hsl(var(--primary)) 14%, transparent) 0%, transparent 70%);
+    radial-gradient(50% 40% at 70% 10%, hsl(var(--primary) / 0.28) 0%, transparent 70%),
+    radial-gradient(40% 35% at 20% 0%, hsl(var(--primary) / 0.14) 0%, transparent 70%);
   will-change: transform;
 }
 .hero-inner { position: relative; padding: 120px 24px 96px; max-width: 880px; }
@@ -160,12 +161,14 @@ code {
   overflow-x: auto; white-space: nowrap;
 }
 .cmd-lg { display: inline-block; }
+.cmd-block { white-space: pre; line-height: 1.9; margin: 8px 0 0; }
 
 /* ---- install / byok ---- */
 .install { padding: 80px 24px 24px; }
 .install-note { color: hsl(var(--muted-foreground)); font-size: 17px; max-width: 720px; line-height: 1.6; }
 .install-note code { font-size: 14px; }
 .byok { padding: 40px 24px 80px; }
+.byok-sub { font-size: 18px; font-weight: 600; margin: 28px 0 6px; }
 
 /* ---- terminal hero card ---- */
 .term .term-body {
