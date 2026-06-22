@@ -8,10 +8,13 @@ For developers who are strong on backend and weak on UI: stop guessing at a desi
 
 ## Quick start
 
+Requires **Node 22+** and **git**. From inside any project folder:
+
 ```bash
-# zero-install, like shadcn
-npx design-brief@latest play
+npx github:nayyershahzad/design-brief play
 ```
+
+The first run clones and builds once (~30–60s), then it's cached. (A shorter npm-registry command is planned.)
 
 This boots a local playground at `http://localhost:4321`, detects your project, and lets you compare design directions side by side. Lock one and it writes:
 
