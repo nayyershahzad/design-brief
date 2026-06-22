@@ -41,10 +41,12 @@ const SUGGESTED = [
 ];
 
 export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
-  const [appType, setAppType] = useState("admin dashboard");
-  const [appFamily, setAppFamily] = useState<AppType>("dashboard");
-  const [audience, setAudience] = useState("power users");
-  const [picked, setPicked] = useState<string[]>(["precise", "dense"]);
+  const [appType, setAppType] = useState("marketing site");
+  const [appFamily, setAppFamily] = useState<AppType>("marketing");
+  const [audience, setAudience] = useState("founders");
+  // Defaults bias toward a motion-rich direction (grain-dark) so the animated
+  // preview is obvious on first submit.
+  const [picked, setPicked] = useState<string[]>(["bold", "technical"]);
 
   function toggle(word: string) {
     setPicked((p) => (p.includes(word) ? p.filter((w) => w !== word) : [...p, word]));
