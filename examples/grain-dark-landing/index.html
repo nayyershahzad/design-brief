@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Continuum — a world model your software can reason over</title>
+    <meta
+      name="description"
+      content="Demo landing page built entirely from the design-brief 'grain-dark' token export."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <!-- machine-owned: the design-brief export (tokens + .db-* motion utilities + grain) -->
+    <link rel="stylesheet" href="globals.css" />
+    <!-- agent-authored: layout/composition built ON the tokens -->
+    <link rel="stylesheet" href="page.css" />
+  </head>
+  <body>
+    <!-- scroll progress (DESIGN_SPEC: .db-scroll-progress; JS-driven here for cross-browser) -->
+    <div class="progress" id="progress" aria-hidden="true"></div>
+
+    <header class="nav">
+      <div class="container nav-inner">
+        <a class="wordmark" href="#top">◆ Continuum</a>
+        <nav class="nav-links">
+          <a href="#features">Platform</a>
+          <a href="#stats">Performance</a>
+          <a href="#manifesto">Approach</a>
+        </nav>
+        <a class="btn btn-primary db-hover db-pressable" href="#cta">Start building</a>
+      </div>
+    </header>
+
+    <main id="top">
+      <!-- HERO: gradient mesh + grain + parallax + kinetic headline -->
+      <section class="hero db-grain">
+        <div class="hero-mesh" id="mesh" aria-hidden="true"></div>
+        <div class="container hero-inner">
+          <span class="eyebrow">A world model for autonomous systems</span>
+          <h1 class="display db-kinetic">
+            <span>The </span><span>world </span><span>model </span><span>your </span><span>software </span><span>can </span><span>reason </span><span>over.</span>
+          </h1>
+          <p class="lede">
+            Continuum gives your agents a live, queryable model of your systems — so they plan,
+            predict, and act with the context a senior engineer would have.
+          </p>
+          <div class="hero-cta">
+            <a class="btn btn-primary db-hover db-pressable" href="#cta">Start building</a>
+            <a class="btn btn-ghost db-hover" href="#features">Read the docs</a>
+          </div>
+          <div class="hero-card db-grain" id="heroCard" aria-hidden="true">
+            <div class="hc-bar">
+              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+            </div>
+            <div class="hc-body">
+              <div class="hc-row"><span>predict()</span><span class="num">0.42ms</span></div>
+              <div class="hc-row"><span>state.snapshot</span><span class="num">8,932</span></div>
+              <div class="hc-row hc-live"><span>drift detected</span><span class="num">+3.2%</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LOGO STRIP -->
+      <section class="logos container">
+        <span>Trusted by teams at</span>
+        <div class="logo-row">
+          <span>NORTHWIND</span><span>AETHER</span><span>HELIX</span><span>VANTA</span><span>QUORUM</span>
+        </div>
+      </section>
+
+      <!-- BENTO FEATURES -->
+      <section class="features container" id="features">
+        <h2 class="section-title" data-reveal>Built for software that thinks.</h2>
+        <div class="bento">
+          <article class="card span-2 db-hover db-transition" data-reveal>
+            <h3>A live world model</h3>
+            <p>Every service, dependency, and metric as one queryable graph your agents read in real time.</p>
+          </article>
+          <article class="card db-hover db-transition" data-reveal>
+            <h3>Predictive</h3>
+            <p>Simulate a change before it ships.</p>
+          </article>
+          <article class="card db-hover db-transition" data-reveal>
+            <h3>Grounded</h3>
+            <p>Answers cite the exact state they came from.</p>
+          </article>
+          <article class="card span-2 db-hover db-transition" data-reveal>
+            <h3>Agent-native API</h3>
+            <p>Typed tools and a streaming context window your coding agents call directly — no glue code.</p>
+          </article>
+        </div>
+      </section>
+
+      <!-- STATS -->
+      <section class="stats container" id="stats">
+        <div class="stat" data-reveal><span class="num">99.98%</span><span class="lbl">model freshness</span></div>
+        <div class="stat" data-reveal><span class="num">0.4ms</span><span class="lbl">p50 query</span></div>
+        <div class="stat" data-reveal><span class="num">12B</span><span class="lbl">edges modeled</span></div>
+        <div class="stat" data-reveal><span class="num">40+</span><span class="lbl">native integrations</span></div>
+      </section>
+
+      <!-- MANIFESTO -->
+      <section class="manifesto container" id="manifesto" data-reveal>
+        <p>
+          Most tools hand an agent a pile of logs. Continuum hands it
+          <em>understanding</em> — a model coherent enough to reason over, fast enough to act on.
+        </p>
+      </section>
+
+      <!-- CTA -->
+      <section class="cta db-grain" id="cta">
+        <div class="container cta-inner" data-reveal>
+          <h2 class="display-sm">Give your agents a world to think in.</h2>
+          <a class="btn btn-primary btn-lg db-hover db-pressable" href="#top">Start building →</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <div class="container foot-inner">
+        <span>◆ Continuum</span>
+        <span class="muted">A demo page generated from the design-brief “grain-dark” token export.</span>
+      </div>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+</html>

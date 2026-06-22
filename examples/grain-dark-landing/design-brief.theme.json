@@ -1,0 +1,45 @@
+{
+  "theme": {
+    "extend": {
+      "fontFamily": {
+        "sans": [
+          "Geist",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif"
+        ],
+        "mono": [
+          "Geist Mono",
+          "ui-monospace",
+          "monospace"
+        ]
+      },
+      "borderRadius": {
+        "DEFAULT": "10px",
+        "lg": "16px"
+      },
+      "borderWidth": {
+        "hairline": "1px"
+      },
+      "transitionDuration": {
+        "fast": "120ms",
+        "DEFAULT": "260ms"
+      },
+      "transitionTimingFunction": {
+        "standard": "cubic-bezier(0.2, 0, 0, 1)",
+        "entrance": "cubic-bezier(0.16, 1, 0.3, 1)"
+      },
+      "colors": {
+        "accent": {
+          "DEFAULT": "#B6F23D",
+          "foreground": "#0A0A0B",
+          "hover": "#C8FF5C",
+          "muted": "#1A1F12"
+        },
+        "success": "#4ADE80",
+        "danger": "#F87171",
+        "warning": "#FBBF24"
+      }
+    }
+  }
+}
