@@ -84,7 +84,7 @@
   }
   @keyframes db-parallax { from { transform: translateY(12px); } to { transform: translateY(-12px); } }
   .db-kinetic > * {
-    display: inline-block; opacity: 0;
+    display: inline-block; white-space: pre; opacity: 0;
     animation: db-kinetic var(--db-duration-base) var(--db-ease-entrance) forwards;
   }
   @keyframes db-kinetic { from { opacity: 0; transform: translateY(0.4em); } to { opacity: 1; transform: none; } }

@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Continuum — a world model your software can reason over</title>
+    <title>design-brief — explore UI directions, lock one, hand your agent the contract</title>
     <meta
       name="description"
-      content="Demo landing page built entirely from the design-brief 'grain-dark' token export."
+      content="A local-first, agent-agnostic tool for devs who can build anything except a decent UI. npx design-directions@latest play"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -14,117 +14,139 @@
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <!-- machine-owned: the design-brief export (tokens + .db-* motion utilities + grain) -->
+    <!-- machine-owned: the design-brief 'grain-dark' export (tokens + .db-* utilities + grain) -->
     <link rel="stylesheet" href="globals.css" />
     <!-- agent-authored: layout/composition built ON the tokens -->
     <link rel="stylesheet" href="page.css" />
   </head>
   <body>
-    <!-- scroll progress (DESIGN_SPEC: .db-scroll-progress; JS-driven here for cross-browser) -->
     <div class="progress" id="progress" aria-hidden="true"></div>
 
     <header class="nav">
       <div class="container nav-inner">
-        <a class="wordmark" href="#top">◆ Continuum</a>
+        <a class="wordmark" href="#top">◆ design-brief</a>
         <nav class="nav-links">
-          <a href="#features">Platform</a>
-          <a href="#stats">Performance</a>
-          <a href="#manifesto">Approach</a>
+          <a href="#how">How it works</a>
+          <a href="#meta">The trick</a>
+          <a href="https://github.com/nayyershahzad/design-brief">GitHub</a>
         </nav>
-        <a class="btn btn-primary db-hover db-pressable" href="#cta">Start building</a>
+        <a class="btn btn-primary db-hover db-pressable" href="#install">Get started</a>
       </div>
     </header>
 
     <main id="top">
-      <!-- HERO: gradient mesh + grain + parallax + kinetic headline -->
+      <!-- HERO: funny pain point → the product → the command -->
       <section class="hero db-grain">
         <div class="hero-mesh" id="mesh" aria-hidden="true"></div>
         <div class="container hero-inner">
-          <span class="eyebrow">A world model for autonomous systems</span>
+          <span class="eyebrow">for developers who can build anything except a decent UI</span>
           <h1 class="display db-kinetic">
-            <span>The </span><span>world </span><span>model </span><span>your </span><span>software </span><span>can </span><span>reason </span><span>over.</span>
+            <span>Flawless </span><span>backend. </span><span>Buttons </span><span>in </span><span>crisis.</span>
           </h1>
           <p class="lede">
-            Continuum gives your agents a live, queryable model of your systems — so they plan,
-            predict, and act with the context a senior engineer would have.
+            <strong>design-brief</strong> is a local, agent-agnostic tool for devs who are strong on
+            logic and weak on pixels. Explore real UI directions in your browser, lock one, and hand
+            your coding agent a design <em>contract</em> it can actually build from — instead of
+            prompting “make it look nice” and praying.
           </p>
           <div class="hero-cta">
-            <a class="btn btn-primary db-hover db-pressable" href="#cta">Start building</a>
-            <a class="btn btn-ghost db-hover" href="#features">Read the docs</a>
+            <a class="btn btn-primary db-hover db-pressable" href="#install">Get started</a>
+            <a class="btn btn-ghost db-hover" href="https://www.npmjs.com/package/design-directions">View on npm</a>
           </div>
-          <div class="hero-card db-grain" id="heroCard" aria-hidden="true">
-            <div class="hc-bar">
-              <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-            </div>
-            <div class="hc-body">
-              <div class="hc-row"><span>predict()</span><span class="num">0.42ms</span></div>
-              <div class="hc-row"><span>state.snapshot</span><span class="num">8,932</span></div>
-              <div class="hc-row hc-live"><span>drift detected</span><span class="num">+3.2%</span></div>
+
+          <div class="hero-card term db-grain" id="heroCard" aria-hidden="true">
+            <div class="hc-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <div class="term-body">
+              <div><span class="prompt">$</span> npx design-directions@latest play</div>
+              <div class="muted">  ➜  playground on http://localhost:4321</div>
+              <div class="muted">  detected project · exports ready</div>
+              <div class="ok">  ✓ locked “grain-dark” → globals.css · tailwind · DESIGN_SPEC.md</div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- LOGO STRIP -->
-      <section class="logos container">
-        <span>Trusted by teams at</span>
-        <div class="logo-row">
-          <span>NORTHWIND</span><span>AETHER</span><span>HELIX</span><span>VANTA</span><span>QUORUM</span>
-        </div>
+      <!-- INSTALL -->
+      <section class="install container" id="install">
+        <h2 class="section-title" data-reveal>One command. No account. No build step.</h2>
+        <div class="cmd" data-reveal><span class="prompt">$</span> npx design-directions@latest play</div>
+        <p class="install-note" data-reveal>
+          Boots a local playground at <code>localhost:4321</code>, detects your project, and writes
+          <code>globals.css</code>, the Tailwind theme, and <code>DESIGN_SPEC.md</code> straight into
+          it when you lock a direction. Works fully offline with a preset library — no account, no
+          telemetry. Prefer a global install? <code>npm i -g design-directions</code> (the command is
+          <code>design-brief</code>).
+        </p>
       </section>
 
-      <!-- BENTO FEATURES -->
-      <section class="features container" id="features">
-        <h2 class="section-title" data-reveal>Built for software that thinks.</h2>
+      <!-- HOW IT WORKS -->
+      <section class="features container" id="how">
+        <h2 class="section-title" data-reveal>From “I’ll just wing the CSS” to a real contract.</h2>
         <div class="bento">
-          <article class="card span-2 db-hover db-transition" data-reveal>
-            <h3>A live world model</h3>
-            <p>Every service, dependency, and metric as one queryable graph your agents read in real time.</p>
+          <article class="card db-hover db-transition" data-reveal>
+            <span class="step">01</span><h3>Brief</h3>
+            <p>App type, audience, a few personality words. That’s it.</p>
           </article>
           <article class="card db-hover db-transition" data-reveal>
-            <h3>Predictive</h3>
-            <p>Simulate a change before it ships.</p>
+            <span class="step">02</span><h3>Explore</h3>
+            <p>3–5 coherent directions, side by side. Tweak live — instant, deterministic, no AI.</p>
           </article>
           <article class="card db-hover db-transition" data-reveal>
-            <h3>Grounded</h3>
-            <p>Answers cite the exact state they came from.</p>
+            <span class="step">03</span><h3>Lock</h3>
+            <p>One Direction becomes the single source of truth. Nothing can drift.</p>
           </article>
           <article class="card span-2 db-hover db-transition" data-reveal>
-            <h3>Agent-native API</h3>
-            <p>Typed tools and a streaming context window your coding agents call directly — no glue code.</p>
+            <span class="step">04</span><h3>Export the contract</h3>
+            <p><code>globals.css</code> (shadcn variables + motion), the Tailwind theme, and a
+              <code>DESIGN_SPEC.md</code> with hard constraints, per-app-type component scope, motion,
+              and accessibility.</p>
+          </article>
+          <article class="card db-hover db-transition" data-reveal>
+            <span class="step">05</span><h3>Hand it off</h3>
+            <p>Give the spec to v0, Framer, Cursor, or Claude Code. It builds the real thing.</p>
           </article>
         </div>
       </section>
 
-      <!-- STATS -->
-      <section class="stats container" id="stats">
-        <div class="stat" data-reveal><span class="num">99.98%</span><span class="lbl">model freshness</span></div>
-        <div class="stat" data-reveal><span class="num">0.4ms</span><span class="lbl">p50 query</span></div>
-        <div class="stat" data-reveal><span class="num">12B</span><span class="lbl">edges modeled</span></div>
-        <div class="stat" data-reveal><span class="num">40+</span><span class="lbl">native integrations</span></div>
+      <!-- META PROOF -->
+      <section class="manifesto container" id="meta" data-reveal>
+        <p>
+          The trick: <em>this entire page</em> was built from design-brief’s own “grain-dark” export.
+          The colors, type, grain, and every animation come straight from the tokens. Lock a
+          direction, hand the <code>DESIGN_SPEC.md</code> to your agent, and it builds something like
+          this — on brand, by construction.
+        </p>
       </section>
 
-      <!-- MANIFESTO -->
-      <section class="manifesto container" id="manifesto" data-reveal>
-        <p>
-          Most tools hand an agent a pile of logs. Continuum hands it
-          <em>understanding</em> — a model coherent enough to reason over, fast enough to act on.
+      <!-- BYO KEY -->
+      <section class="byok container" data-reveal>
+        <h2 class="section-title">Want AI to invent new directions? Bring your own key.</h2>
+        <p class="install-note">
+          Presets are the offline floor. Set one env var and the playground’s “Remix” will author
+          brand-new directions from your brief: <code>ANTHROPIC_API_KEY</code>,
+          <code>OPENAI_API_KEY</code>, <strong>Groq</strong> (OpenAI-compatible — point
+          <code>OPENAI_BASE_URL</code> at Groq), or a fully local <code>OLLAMA_HOST</code>. Keys stay
+          on your machine; nothing is ever sent to us.
         </p>
       </section>
 
       <!-- CTA -->
       <section class="cta db-grain" id="cta">
         <div class="container cta-inner" data-reveal>
-          <h2 class="display-sm">Give your agents a world to think in.</h2>
-          <a class="btn btn-primary btn-lg db-hover db-pressable" href="#top">Start building →</a>
+          <h2 class="display-sm">Stop hand-tuning hex codes.</h2>
+          <div class="cmd cmd-lg"><span class="prompt">$</span> npx design-directions@latest play</div>
+          <div class="hero-cta" style="justify-content:center">
+            <a class="btn btn-ghost db-hover" href="https://github.com/nayyershahzad/design-brief">Star on GitHub</a>
+            <a class="btn btn-ghost db-hover" href="https://www.npmjs.com/package/design-directions">View on npm</a>
+          </div>
         </div>
       </section>
     </main>
 
     <footer class="foot">
       <div class="container foot-inner">
-        <span>◆ Continuum</span>
-        <span class="muted">A demo page generated from the design-brief “grain-dark” token export.</span>
+        <span>◆ design-brief</span>
+        <span class="muted">Local-first · agent-agnostic · MIT. This page is built from its own token export.</span>
       </div>
     </footer>
 

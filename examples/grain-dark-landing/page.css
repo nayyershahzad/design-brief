@@ -142,3 +142,44 @@ body {
   [data-reveal] { opacity: 1; transform: none; transition: none; }
   .hero-mesh, .hero-card { transform: none !important; }
 }
+
+/* ---- inline code + command blocks ---- */
+code {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: 0.9em;
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  padding: 1px 6px; border-radius: 6px;
+}
+.prompt { color: hsl(var(--primary)); user-select: none; }
+.cmd {
+  font-family: "Geist Mono", ui-monospace, monospace;
+  font-size: clamp(15px, 2.2vw, 20px);
+  background: hsl(var(--card)); border: 1px solid hsl(var(--border));
+  border-radius: var(--radius); padding: 18px 22px; margin: 8px 0 20px;
+  overflow-x: auto; white-space: nowrap;
+}
+.cmd-lg { display: inline-block; }
+
+/* ---- install / byok ---- */
+.install { padding: 80px 24px 24px; }
+.install-note { color: hsl(var(--muted-foreground)); font-size: 17px; max-width: 720px; line-height: 1.6; }
+.install-note code { font-size: 14px; }
+.byok { padding: 40px 24px 80px; }
+
+/* ---- terminal hero card ---- */
+.term .term-body {
+  display: grid; gap: 8px; padding: 6px 6px 2px;
+  font-family: "Geist Mono", ui-monospace, monospace; font-size: 13px;
+  color: hsl(var(--muted-foreground)); line-height: 1.5;
+}
+.term .term-body .ok { color: hsl(var(--primary)); }
+.term .term-body > div:first-child { color: hsl(var(--foreground)); }
+
+/* ---- step numbers on feature cards ---- */
+.step {
+  font-family: "Geist Mono", ui-monospace, monospace; font-size: 13px;
+  color: hsl(var(--primary)); display: block; margin-bottom: 10px;
+}
+.card em, .lede em, .manifesto em { color: hsl(var(--primary)); font-style: normal; }
+.lede strong { color: hsl(var(--foreground)); }

@@ -171,7 +171,7 @@ function advancedMotionCss(d: Direction): string {
         .join("\n");
       rules.push(
         "  .db-kinetic > * {\n" +
-          "    display: inline-block; opacity: 0;\n" +
+          "    display: inline-block; white-space: pre; opacity: 0;\n" +
           "    animation: db-kinetic var(--db-duration-base) var(--db-ease-entrance) forwards;\n" +
           "  }\n" +
           `  @keyframes db-kinetic { ${frame} }\n` +
