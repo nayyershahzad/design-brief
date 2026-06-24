@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { presets, seedDirections, getPreset } from "../src/presets/index.js";
 import { DirectionSchema } from "../src/schema.js";
+import { auditDirection } from "../src/util/audit.js";
 
 describe("presets", () => {
   it("ships at least 5 presets", () => {
@@ -27,6 +28,14 @@ describe("presets", () => {
   it("getPreset resolves by id", () => {
     expect(getPreset("terminal")?.label).toBe("Terminal");
     expect(getPreset("does-not-exist")).toBeUndefined();
+  });
+
+  it("every shipped preset passes the enforced WCAG AA contrast gate", () => {
+    for (const p of presets) {
+      const audit = auditDirection(p);
+      const detail = audit.failures.map((f) => `${f.label} ${f.ratio}:1`).join(", ");
+      expect(audit.failures, `${p.id}: ${detail}`).toHaveLength(0);
+    }
   });
 });
 

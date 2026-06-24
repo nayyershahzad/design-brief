@@ -20,6 +20,10 @@ function cssVars(d: Direction): Array<[string, string]> {
     ["--input", hexToHsl(d.color.surface.border)],
     ["--ring", hexToHsl(d.color.accent.primary)],
     ["--radius", pxToRem(d.shape.radius)],
+    // Intermediate radii shadcn components reference (Card sm, Button md, etc.),
+    // derived from --radius so they always track the locked value.
+    ["--radius-sm", "calc(var(--radius) - 4px)"],
+    ["--radius-md", "calc(var(--radius) - 2px)"],
   ];
 }
 
@@ -199,5 +203,17 @@ export function toShadcnCss(d: Direction): string {
   if (tex) parts.push(tex);
   const adv = advancedMotionCss(d);
   if (adv) parts.push(adv);
-  return parts.join("\n\n") + "\n";
+  const body = parts.join("\n\n");
+  // Wrap the generated tokens in explicit markers and append an empty,
+  // commented overrides region. Consumers regenerate by replacing ONLY the
+  // content between the markers, so anything they add below the end marker
+  // survives a re-export. Makes the safe correction path the obvious one.
+  return (
+    "/* === design-brief: generated tokens — regenerate replaces only this block === */\n\n" +
+    body +
+    "\n\n/* === design-brief: end generated tokens === */\n\n" +
+    "/* Consumer overrides — safe to edit. Add your corrections below this line;\n" +
+    "   they live outside the generated block, so re-exporting won't clobber them.\n" +
+    "   e.g.  :root { --primary: 200 90% 40%; }  */\n"
+  );
 }

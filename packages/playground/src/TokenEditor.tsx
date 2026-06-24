@@ -1,5 +1,5 @@
 import type { Direction } from "@design-brief/core";
-import { DirectionSchema } from "@design-brief/core";
+import { auditDirection, DirectionSchema } from "@design-brief/core";
 
 const ROW_HEIGHT: Record<Direction["density"]["level"], string> = {
   compact: "32px",
@@ -42,6 +42,7 @@ export function TokenEditor({
   }
 
   const radiusPx = parseInt(d.shape.radius, 10) || 0;
+  const audit = auditDirection(d);
 
   return (
     <div className="space-y-4">
@@ -55,6 +56,18 @@ export function TokenEditor({
         {colorField("Text primary", d.color.text.primary, (v) => patch((x) => { x.color.text.primary = v; }))}
         {colorField("Text secondary", d.color.text.secondary, (v) => patch((x) => { x.color.text.secondary = v; }))}
         {colorField("Accent", d.color.accent.primary, (v) => patch((x) => { x.color.accent.primary = v; }))}
+        {audit.failures.length > 0 ? (
+          <div className="rounded border border-red-200 bg-red-50 p-2 text-[11px] text-red-700 space-y-0.5">
+            <div className="font-medium">⚠ Contrast below WCAG AA</div>
+            {audit.failures.map((c) => (
+              <div key={c.label}>
+                {c.label}: {c.ratio.toFixed(2)}:1 <span className="text-red-400">(needs ≥{c.floor})</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-[11px] text-emerald-700">✓ Contrast: all text pairs ≥ 4.5:1</div>
+        )}
       </fieldset>
 
       <fieldset className="space-y-2">

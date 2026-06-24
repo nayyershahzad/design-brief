@@ -61,6 +61,26 @@ describe("remixDirection", () => {
     expect(out.id).toBe("fenced");
   });
 
+  it("stamps a contrast warning when the remix stays below WCAG AA", async () => {
+    // Stub keeps returning a saturated-blue base with low-contrast text — exactly
+    // the failure class that shipped unflagged before 0.5.0.
+    const provider = stubProvider((seed) => {
+      const s = seed as { color: { surface: Record<string, string>; text: Record<string, string> } };
+      return {
+        ...s,
+        id: "low-contrast",
+        color: {
+          ...s.color,
+          surface: { ...s.color.surface, base: "#002e7a" },
+          text: { ...s.color.text, primary: "#aa7942", secondary: "#919191" },
+        },
+      };
+    });
+    const out = await remixDirection(terminal, brief, provider);
+    expect(() => DirectionSchema.parse(out)).not.toThrow(); // still returns a usable Direction
+    expect(out.provenance.notes).toMatch(/WCAG|contrast/i); // ...but loudly flagged
+  });
+
   it("retries once then throws a clear error on invalid output", async () => {
     let calls = 0;
     const provider: RemixProvider = {

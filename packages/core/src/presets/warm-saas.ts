@@ -11,13 +11,15 @@ export const warmSaas = definePreset({
   color: {
     accent: {
       ramp: "amber",
-      primary: "#E8590C",
+      // Darkened from #E8590C → #CB4E0A so white button labels and accent links
+      // clear WCAG AA (>= 4.5:1) on white; verified by the preset contrast gate.
+      primary: "#CB4E0A",
       primaryForeground: "#FFFFFF",
-      hover: "#F76707",
+      hover: "#E8590C",
       muted: "#FFF3E6",
     },
     surface: { base: "#FFFFFF", raised: "#FBF7F2", border: "#ECE2D6", elevation: "shadow" },
-    text: { primary: "#2B2620", secondary: "#7A6F60", accent: "#E8590C" },
+    text: { primary: "#2B2620", secondary: "#7A6F60", accent: "#CB4E0A" },
     semantic: { success: "#2F9E44", danger: "#E03131", warning: "#F08C00" },
   },
   typography: {

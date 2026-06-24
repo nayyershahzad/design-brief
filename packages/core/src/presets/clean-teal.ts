@@ -11,13 +11,15 @@ export const cleanTeal = definePreset({
   color: {
     accent: {
       ramp: "teal",
-      primary: "#0CA678",
+      // Darkened from #0CA678 → #0A8762 so white button labels and accent links
+      // clear WCAG AA (>= 4.5:1) on white; verified by the preset contrast gate.
+      primary: "#0A8762",
       primaryForeground: "#FFFFFF",
-      hover: "#12B886",
+      hover: "#0C9D72",
       muted: "#E6FCF5",
     },
     surface: { base: "#FFFFFF", raised: "#F6F9F8", border: "#DDE6E3", elevation: "shadow" },
-    text: { primary: "#1A2421", secondary: "#5C6B66", accent: "#0CA678" },
+    text: { primary: "#1A2421", secondary: "#5C6B66", accent: "#0A8762" },
     semantic: { success: "#0CA678", danger: "#E03131", warning: "#F59F00" },
   },
   typography: {

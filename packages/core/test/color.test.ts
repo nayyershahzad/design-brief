@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { hexToHsl, pxToRem, parseHex } from "../src/util/color.js";
+import { contrastRatio, hexToHsl, hueName, pxToRem, parseHex } from "../src/util/color.js";
 
 describe("hexToHsl", () => {
   it("converts the primaries and grays", () => {
@@ -34,5 +34,38 @@ describe("pxToRem", () => {
 
   it("rejects non-numeric values", () => {
     expect(() => pxToRem("auto")).toThrow();
+  });
+});
+
+describe("contrastRatio", () => {
+  it("black on white is 21:1", () => {
+    expect(contrastRatio("#000000", "#FFFFFF")).toBeCloseTo(21, 1);
+  });
+
+  it("identical colors are 1:1", () => {
+    expect(contrastRatio("#123456", "#123456")).toBeCloseTo(1, 5);
+  });
+
+  it("is symmetric", () => {
+    expect(contrastRatio("#0A0A0B", "#F4F4F5")).toBeCloseTo(contrastRatio("#F4F4F5", "#0A0A0B"), 6);
+  });
+
+  it("matches the known grain-dark text/base pair (~18:1)", () => {
+    expect(contrastRatio("#F4F4F5", "#0A0A0B")).toBeGreaterThan(17);
+  });
+});
+
+describe("hueName", () => {
+  it("names the accent hue families", () => {
+    expect(hueName("#00fdff")).toBe("cyan");
+    expect(hueName("#B6F23D")).toBe("lime");
+    expect(hueName("#2563EB")).toBe("blue");
+    expect(hueName("#E8590C")).toBe("orange");
+  });
+
+  it("names neutrals", () => {
+    expect(hueName("#FFFFFF")).toBe("near-white");
+    expect(hueName("#000000")).toBe("near-black");
+    expect(hueName("#808080")).toBe("gray");
   });
 });

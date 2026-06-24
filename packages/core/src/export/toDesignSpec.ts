@@ -1,4 +1,6 @@
 import type { Direction, AppType } from "../schema.js";
+import { auditDirection } from "../util/audit.js";
+import { hueName } from "../util/color.js";
 import { toShadcnCss } from "./toShadcnCss.js";
 
 function cap(s: string): string {
@@ -130,6 +132,11 @@ export function toDesignSpec(d: Direction): string {
           `- Durations: fast \`${m.durationFast}\` (hover/press), base \`${m.durationBase}\` (entrances/transitions).`,
           `- Easing: \`${m.easingStandard}\` for state changes, \`${m.easingEntrance}\` for entrances/reveals.`,
           `- Hover: ${hoverDesc[m.hover]}. Press: ${pressDesc}. Scroll reveal: ${revealDesc[m.scrollReveal]}.`,
+          ...(m.scrollReveal !== "none"
+            ? [
+                "- Reveal timing: `.db-reveal` / `.db-stagger` animate when the element ENTERS the viewport — so above-the-fold content animates on mount, which is intended. For strictly-on-scroll behavior, trigger via an IntersectionObserver threshold instead of on load.",
+              ]
+            : []),
           "- ALWAYS wrap motion in `@media (prefers-reduced-motion: no-preference)` with a static fallback. `globals.css` ships ready-made `.db-transition` / `.db-hover` / `.db-pressable` / `.db-reveal` utilities.",
         ].join("\n");
 
@@ -197,7 +204,7 @@ export function toDesignSpec(d: Direction): string {
         ? `Flat surfaces (\`elevation: flat\`) — separate with spacing and the \`${d.color.surface.border}\` border, not shadows.`
         : `Borders are \`${d.shape.borderWidth}\`, color \`${d.color.surface.border}\`. Use borders, not drop shadows, for separation.`,
     `${cap(d.density.level)} density: table rows \`${d.density.rowHeight}\`. Do not pad out to looser spacing.`,
-    `Accessibility floor: text-on-surface contrast >= 4.5:1. Secondary text \`${d.color.text.secondary}\` is intended for use on \`${d.color.surface.base}\`.`,
+    `Accessibility floor: every text/surface pair must meet WCAG AA (>= 4.5:1 normal, >= 3:1 large). See the Accessibility section for the computed per-pair ratios for THIS design — do not ship a pair marked below floor.`,
   ];
 
   const componentScope = Array.from(new Set(d.appTypes))
@@ -230,12 +237,27 @@ export function toDesignSpec(d: Direction): string {
         ? `Remixed from the \`${p.seededFrom}\` preset.`
         : `Locked directly from the \`${p.seededFrom}\` preset with no remix.`;
 
+  // Computed contrast — REAL numbers measured from the emitted tokens, never an
+  // asserted claim. AI-remixed / hand-tweaked directions can fail here.
+  const audit = auditDirection(d);
+  const contrastRows = audit.checks
+    .map(
+      (c) =>
+        `- ${c.pass ? "✅" : "❌"} ${c.label}: \`${c.fg}\` on \`${c.bg}\` = **${c.ratio.toFixed(2)}:1** (needs >= ${c.floor}:1${c.severity === "info" ? ", informational — decorative borders are intentionally subtle" : ""})`,
+    )
+    .join("\n");
+  const contrastVerdict =
+    audit.failures.length === 0
+      ? "All enforced text pairs meet WCAG AA. Ratios below were computed from the final tokens, not asserted."
+      : `⚠️ **${audit.failures.length} pair(s) fail WCAG AA — fix the tokens before shipping.** This design is NOT accessible as-is; darken/lighten the offending colors (or override them) until every enforced pair is >= 4.5:1:`;
+
   const primaryAppType = d.appTypes[0] ?? "app";
+  const otherAppTypes = Array.from(new Set(d.appTypes)).filter((t) => t !== primaryAppType);
   const handoffSection = `## Build it with an AI generator
 
 Hand all three files — this spec, \`globals.css\`, and \`design-brief.theme.json\` — to a code generator, with a prompt like:
 
-> Build [what you're building] as a **${primaryAppType}** using shadcn/ui + Tailwind. Treat \`DESIGN_SPEC.md\` as the binding design contract: use only its tokens, follow its Hard constraints, Do/Don't, and Component scope, wire \`globals.css\` and \`design-brief.theme.json\` exactly as the Install section says, and implement the Motion section while honoring \`prefers-reduced-motion\`. Do not introduce colors, fonts, radii, spacing, or motion that aren't in this spec.
+> Build [what you're building] as a **${primaryAppType}**${otherAppTypes.length ? ` (this direction also fits ${otherAppTypes.join(", ")} — swap in the one you're actually building; see Component scope)` : ""} using shadcn/ui + Tailwind. Treat \`DESIGN_SPEC.md\` as the binding design contract: use only its tokens, follow its Hard constraints, Do/Don't, and Component scope, wire \`globals.css\` and \`design-brief.theme.json\` exactly as the Install section says, and implement the Motion section while honoring \`prefers-reduced-motion\`. Do not introduce colors, fonts, radii, spacing, or motion that aren't in this spec.
 
 Tool notes:
 
@@ -274,9 +296,9 @@ Target stack: **shadcn/ui + Tailwind**. When a token here conflicts with a libra
 
 ## Design intent (human-readable)
 
-A ${personality} surface. ${dark ? "A calm dark interface" : "A clean light interface"} built around a single ${
-    d.color.accent.ramp ?? "accent"
-  } accent, ${cap(d.density.level)} density, and \`${d.shape.borderWidth}\` borders over drop shadows. Numerals use ${
+A ${personality} surface. ${dark ? "A calm dark interface" : "A clean light interface"} built around a single ${hueName(
+    d.color.accent.primary,
+  )} accent (\`${d.color.accent.primary}\`), ${cap(d.density.level)} density, and \`${d.shape.borderWidth}\` borders over drop shadows. Numerals use ${
     d.typography.fontMono
   } for aligned, tabular reading. If a choice is between "looks impressive" and "reads fast," choose reads fast.
 
@@ -331,7 +353,13 @@ ${advancedMotionSection}
 ${textureSection}
 ## Accessibility
 
-- Contrast: \`${d.color.text.primary}\` on \`${d.color.surface.base}\`, and \`${d.color.accent.primaryForeground}\` on \`${d.color.accent.primary}\`, are intended to meet >= 4.5:1 (>= 3:1 for large text). Use secondary text \`${d.color.text.secondary}\` only at >= ${scaleBody}px.
+### Contrast (computed from the emitted tokens)
+
+${contrastVerdict}
+
+${contrastRows}
+
+- Use secondary text \`${d.color.text.secondary}\` only at >= ${scaleBody}px.
 - Focus: every interactive element shows a visible focus ring in \`--ring\`; never remove outlines without an equivalent replacement.
 - Motion: honor \`prefers-reduced-motion\` (see Motion). Provide a static, fully-usable fallback.
 - Targets: interactive targets are at least the row height (\`${d.density.rowHeight}\`); on mobile, at least 44px.

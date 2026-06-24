@@ -1,4 +1,4 @@
-import { type Direction, parseDirection } from "@design-brief/core";
+import { type Direction, auditDirection, parseDirection } from "@design-brief/core";
 import type { Brief, RemixProvider } from "./adapter.js";
 
 const SYSTEM = `You are a senior product designer who authors design tokens for shadcn/ui-based apps.
@@ -8,7 +8,13 @@ Your job: produce a NEW Direction that keeps the same JSON shape but is retuned 
 Hard rules:
 - Output ONLY a single JSON object. No markdown, no prose, no code fences.
 - Keep EVERY key present in the starting Direction. Do not add or remove keys.
-- All colors are hex strings (e.g. "#1A2B3C"). Keep contrast legible (text vs surface).
+- All colors are hex strings (e.g. "#1A2B3C").
+- ACCESSIBILITY IS NON-NEGOTIABLE. Every text/surface pair must meet WCAG AA (>= 4.5:1):
+  text.primary and text.secondary on BOTH surface.base and surface.raised; text.accent on
+  surface.base; and accent.primaryForeground on accent.primary. Dark, saturated mid-lightness
+  backgrounds (e.g. a deep blue) are a contrast trap — verify before you commit to one.
+- Single accent: keep "text.accent" equal to "accent.primary" unless you have a clear reason,
+  and make "accent.ramp" name the ACTUAL hue of accent.primary.
 - "colorScheme" is exactly "light-first" or "dark-first".
 - "density.level" is exactly "compact", "balanced", or "comfortable".
 - Choose a fresh, kebab-case "id" and a short human "label" that reflect the brief.
@@ -55,9 +61,16 @@ export async function remixDirection(
   provider: RemixProvider,
 ): Promise<Direction> {
   const system = SYSTEM;
-  const user = buildUserPrompt(preset, brief);
+  const baseUser = buildUserPrompt(preset, brief);
+  let user = baseUser;
 
   let lastError: unknown;
+  // A parsed-but-low-contrast result is kept as a fallback: better to return it
+  // with a loud warning (the spec will also show the failing ratios) than to
+  // hard-fail the user's remix. The first failure also feeds the retry prompt.
+  let fallback: Direction | null = null;
+  let fallbackFailures = 0;
+
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const raw = await provider.complete(system, user);
@@ -79,10 +92,31 @@ export async function remixDirection(
         parsed.id = `${preset.id}-remix`;
       }
 
-      return parseDirection(parsed);
+      const direction = parseDirection(parsed);
+      const audit = auditDirection(direction);
+      if (audit.pass) return direction;
+
+      // Contrast failed: remember it, and on the next attempt tell the model
+      // exactly which pairs to fix.
+      fallback = direction;
+      fallbackFailures = audit.failures.length;
+      const fixList = audit.failures
+        .map((f) => `${f.label} (${f.fg} on ${f.bg}) = ${f.ratio.toFixed(2)}:1, needs >= ${f.floor}:1`)
+        .join("; ");
+      user = `${baseUser}\n\nYour previous attempt FAILED WCAG AA contrast on: ${fixList}. Adjust those colors (darken/lighten the surface or the text) until every pair is >= 4.5:1, then return the corrected Direction JSON.`;
     } catch (err) {
       lastError = err;
     }
+  }
+
+  // Couldn't get a clean one. Prefer the low-contrast fallback (with a warning)
+  // over throwing — but if nothing ever parsed, surface the error.
+  if (fallback) {
+    const warn = `⚠ ${fallbackFailures} color pair(s) fall below WCAG AA contrast — review/override before shipping.`;
+    return {
+      ...fallback,
+      provenance: { ...fallback.provenance, notes: `${fallback.provenance.notes} ${warn}`.trim() },
+    };
   }
   throw new Error(
     `remix: could not produce a valid Direction (${lastError instanceof Error ? lastError.message : String(lastError)})`,
