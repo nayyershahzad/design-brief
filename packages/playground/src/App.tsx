@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Direction } from "@design-brief/core";
+import type { AppType, Direction } from "@design-brief/core";
 import { seedDirections } from "@design-brief/core";
-import { BriefForm, type Brief } from "./BriefForm";
+import { APP_FAMILIES, BriefForm, type Brief } from "./BriefForm";
 import { DirectionGrid } from "./DirectionGrid";
 import { PreviewRenderer } from "./PreviewRenderer";
 import { TokenEditor } from "./TokenEditor";
@@ -19,6 +19,9 @@ export default function App() {
   const [brief, setBrief] = useState<Brief | null>(null);
   const [directions, setDirections] = useState<Direction[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // Which sample screen the preview renders. Seeded from the brief, but switchable
+  // live so you can watch the preview morph between app types without starting over.
+  const [previewAppType, setPreviewAppType] = useState<AppType>("marketing");
 
   const [remix, setRemix] = useState<RemixStatus>({ available: false, provider: null, label: null });
   const [remixing, setRemixing] = useState(false);
@@ -47,6 +50,7 @@ export default function App() {
     setBrief(b);
     setDirections(seeded);
     setSelectedId(seeded[0]?.id ?? null);
+    setPreviewAppType(b.appFamily);
   }
 
   function updateSelected(next: Direction) {
@@ -138,8 +142,24 @@ export default function App() {
 
             {selected && (
               <div className="space-y-3">
-                <h3 className="text-sm font-medium text-neutral-600">Preview · {selected.label}</h3>
-                <PreviewRenderer direction={selected} />
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-medium text-neutral-600">Preview · {selected.label}</h3>
+                  <label className="flex items-center gap-2 text-xs text-neutral-500">
+                    Sample screen
+                    <select
+                      value={previewAppType}
+                      onChange={(e) => setPreviewAppType(e.target.value as AppType)}
+                      className="border border-neutral-300 rounded px-2 py-1 bg-white text-neutral-700"
+                    >
+                      {APP_FAMILIES.map((f) => (
+                        <option key={f.value} value={f.value}>
+                          {f.label}
+                        </option>
+                      ))}
+                    </select>
+                  </label>
+                </div>
+                <PreviewRenderer direction={selected} appType={previewAppType} />
               </div>
             )}
           </section>

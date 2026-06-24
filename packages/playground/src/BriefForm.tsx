@@ -2,15 +2,16 @@ import { useState } from "react";
 import type { AppType } from "@design-brief/core";
 
 export interface Brief {
-  /** Free-text label (e.g. "admin dashboard") — shown back to the user. */
+  /** Human label for the chosen family (echoed back + sent to remix). */
   appType: string;
-  /** Structured family that drives which directions are seeded. */
+  /** Structured family that drives seeding AND which sample screen the preview renders. */
   appFamily: AppType;
   audience: string;
   personality: string[];
 }
 
-const APP_FAMILIES: { value: AppType; label: string }[] = [
+/** The single source of truth for the app-type control (used here and by the live preview switcher). */
+export const APP_FAMILIES: { value: AppType; label: string }[] = [
   { value: "marketing", label: "Marketing / landing" },
   { value: "commerce", label: "E-commerce" },
   { value: "content", label: "Content / blog" },
@@ -21,6 +22,10 @@ const APP_FAMILIES: { value: AppType; label: string }[] = [
   { value: "portfolio", label: "Portfolio" },
   { value: "brand", label: "Agency / brand" },
 ];
+
+export function labelForAppType(v: AppType): string {
+  return APP_FAMILIES.find((f) => f.value === v)?.label ?? v;
+}
 
 const SUGGESTED = [
   "precise",
@@ -41,7 +46,6 @@ const SUGGESTED = [
 ];
 
 export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
-  const [appType, setAppType] = useState("marketing site");
   const [appFamily, setAppFamily] = useState<AppType>("marketing");
   const [audience, setAudience] = useState("founders");
   // Defaults bias toward a motion-rich direction (grain-dark) so the animated
@@ -63,15 +67,6 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
 
       <label className="block space-y-1">
         <span className="text-sm font-medium">App type</span>
-        <input
-          value={appType}
-          onChange={(e) => setAppType(e.target.value)}
-          className="w-full border border-neutral-300 rounded px-3 py-2"
-        />
-      </label>
-
-      <label className="block space-y-1">
-        <span className="text-sm font-medium">Category</span>
         <select
           value={appFamily}
           onChange={(e) => setAppFamily(e.target.value as AppType)}
@@ -83,7 +78,9 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
             </option>
           ))}
         </select>
-        <span className="text-[11px] text-neutral-400">Steers which directions are seeded.</span>
+        <span className="text-[11px] text-neutral-400">
+          Picks which sample screen the preview renders and steers which directions are seeded.
+        </span>
       </label>
 
       <label className="block space-y-1">
@@ -97,6 +94,9 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
 
       <div className="space-y-2">
         <span className="text-sm font-medium">Personality</span>
+        <p className="text-[11px] text-neutral-400">
+          Steers the look — color, type, shape, and motion of the seeded directions.
+        </p>
         <div className="flex flex-wrap gap-2">
           {SUGGESTED.map((w) => (
             <button
@@ -116,7 +116,9 @@ export function BriefForm({ onSubmit }: { onSubmit: (b: Brief) => void }) {
       </div>
 
       <button
-        onClick={() => onSubmit({ appType, appFamily, audience, personality: picked })}
+        onClick={() =>
+          onSubmit({ appType: labelForAppType(appFamily), appFamily, audience, personality: picked })
+        }
         className="bg-neutral-900 text-white rounded px-4 py-2 font-medium hover:bg-neutral-800"
       >
         Show directions →
